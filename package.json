@@ -24,7 +24,7 @@
         "@thi.ng/geom-hull": "0.0.27",
         "alpha-shape": "^1.0.0",
         "bezier-js": "^2.4.0",
-        "braces": "^2.3.2",
+        "braces": "^3.0.3",
         "deasync": "^0.1.21",
         "detect-touch-device": "^1.1.5",
         "es6-enum": "^1.1.0",
@@ -34,7 +34,7 @@
         "gsap": "^3.5.0",
         "jszip": "^3.5.0",
         "line-intersect": "^2.2.1",
-        "node-gyp": "^9.0.0",
+        "node-gyp": "^12.2.0",
         "pixi-viewport": "^4.18.0",
         "pixi.js": "^6.4.2",
         "point-in-polygon": "^1.1.0",
@@ -46,6 +46,7 @@
     "devDependencies": {
         "@babel/core": "^7.18.6",
         "buffer": "^6.0.3",
+        "events": "^3.3.0",
         "parcel": "^2.6.2",
         "process": "^0.11.10",
         "querystring-es3": "^0.2.1"
