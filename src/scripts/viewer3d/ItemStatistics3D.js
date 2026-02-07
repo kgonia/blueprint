@@ -11,10 +11,10 @@ import { MeshStandardMaterial } from "three";
 import { CanvasTexture } from "three";
 import { ArrowHelper, Matrix4, Vector3 } from "three";
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
-import { computeMikkTSpaceTangents } from "three/examples/jsm/utils/BufferGeometryUtils";
-import { configDimUnit, Configuration, itemStatistics } from "../core/configuration";
-import { Dimensioning } from "../core/dimensioning";
-import { EVENT_CHANGED, EVENT_ITEM_SELECTED, EVENT_NO_ITEM_SELECTED, EVENT_UPDATED } from "../core/events";
+import { computeMikkTSpaceTangents } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { configDimUnit, Configuration, itemStatistics } from "../core/configuration.js";
+import { Dimensioning } from "../core/dimensioning.js";
+import { EVENT_CHANGED, EVENT_ITEM_SELECTED, EVENT_NO_ITEM_SELECTED, EVENT_UPDATED } from "../core/events.js";
 
 export class StatisticArrow extends Object3D{
     constructor(dir, origin, length, hexColor, headLength, headWidth, textColor = '#FFFFFF', textBackgroundColor= '#000000' ){
@@ -45,6 +45,27 @@ export class StatisticArrow extends Object3D{
         this.__upAxis = new Vector3(0, 1, 0);
         this.__forwardAxis = new Vector3(0, 0, 1);
         this.__updatedEvent = this.__updated.bind(this);
+        this.__visible = true;
+
+        // three.js assigns `visible` as an own property on Object3D instances.
+        // Redefine it here so StatisticArrow updates child visibility consistently.
+        Object.defineProperty(this, 'visible', {
+            configurable: true,
+            enumerable: true,
+            get: () => this.__visible,
+            set: (flag) => {
+                this.__visible = !!flag;
+                if(this.__arrow){
+                    this.__arrow.visible = this.__visible;
+                }
+                if(this.__reverseArrow){
+                    this.__reverseArrow.visible = this.__visible;
+                }
+                if(this.__textElementHolder){
+                    this.__textElementHolder.visible = this.__visible;
+                }
+            },
+        });
 
         this.add(this.__arrow);
         this.add(this.__reverseArrow);
@@ -175,18 +196,6 @@ export class StatisticArrow extends Object3D{
         this.__textMaterial.color = color;
     }
 
-    get visible(){
-        return this.visible;
-    }
-
-    set visible(flag){
-        super.visible = flag;
-        if(this.__arrow){
-            this.__arrow.visible = flag;
-            this.__reverseArrow.visible = flag;
-            this.__textElementHolder.visible = flag;
-        }        
-    }
 }
 
 export class ItemStatistics3D extends Mesh {

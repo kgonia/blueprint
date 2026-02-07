@@ -1,10 +1,10 @@
 import Enum from "es6-enum";
-import { BufferGeometry, Matrix4, Vector3, DoubleSide, Color, BufferGeometryUtils } from "three";
+import { BufferGeometry, Matrix4, Vector3, DoubleSide, Color } from "three";
 import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { EventDispatcher } from "three";
-import { EVENT_PARAMETRIC_GEOMETRY_UPATED } from "../../core/events";
-import { DoorHandleGenerator } from "./doorhandles/DoorHandleGenerator";
-import {Material3D} from '../../materials/Material3D';
+import { EVENT_PARAMETRIC_GEOMETRY_UPATED } from "../../core/events.js";
+import { DoorHandleGenerator } from "./doorhandles/DoorHandleGenerator.js";
+import {Material3D} from '../../materials/Material3D.js';
 
 
 export const DOOR_OPEN_DIRECTIONS = Enum('RIGHT', 'LEFT', 'BOTH_SIDES', 'NO_DOORS');

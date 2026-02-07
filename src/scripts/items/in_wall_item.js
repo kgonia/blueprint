@@ -2,7 +2,7 @@ import { WallItem } from './wall_item.js';
 import { Matrix4, Vector2, Vector3 } from 'three';
 import { Utils } from '../core/utils.js';
 import { UP_VECTOR } from './item.js';
-import { Plane } from 'three/build/three.module.js';
+import { Plane } from 'three';
 /** */
 export class InWallItem extends WallItem {
     constructor(model, metadata, id) {

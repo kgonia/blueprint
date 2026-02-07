@@ -19,10 +19,10 @@ export class Version {
     }
 
     static getInformalVersion() {
-        return '2.0.1a';
+        return '3.0.1';
     }
 
     static getTechnicalVersion() {
-        return '2.0.1a';
+        return '3.0.1';
     }
 }

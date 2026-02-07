@@ -27,12 +27,12 @@ export class Dimensioning {
     }
 
     static pixelToCmVector2D(pixelV2d) {
-        let cmV2d = new Vector2(Dimensioning.cmToPixel(pixelV2d.x), Dimensioning.cmToPixel(pixelV2d.y));
+        let cmV2d = new Vector2(Dimensioning.pixelToCm(pixelV2d.x), Dimensioning.pixelToCm(pixelV2d.y));
         return cmV2d;
     }
 
     static pixelToCmVector3D(pixel3d) {
-        let cmV2d = new Vector3(Dimensioning.cmToPixel(pixel3d.x), Dimensioning.cmToPixel(pixel3d.y), Dimensioning.cmToPixel(pixel3d.z));
+        let cmV2d = new Vector3(Dimensioning.pixelToCm(pixel3d.x), Dimensioning.pixelToCm(pixel3d.y), Dimensioning.pixelToCm(pixel3d.z));
         return cmV2d;
     }
 

@@ -2,13 +2,15 @@
 import {
     EVENT_LOADED, EVENT_ROTATE_SELECTED,EVENT_NO_LIGHT_SELECTED,
     EVENT_LOADING, EVENT_ITEM_REMOVED, EVENT_WALL_CLICKED, EVENT_NEW_ITEM,
-    EVENT_MODE_RESET, EVENT_EXTERNAL_FLOORPLAN_LOADED,EVENT_ITEM_UPDATE
+    EVENT_MODE_RESET, EVENT_EXTERNAL_FLOORPLAN_LOADED,EVENT_ITEM_UPDATE,
+    EVENT_NEW, EVENT_UPDATED, EVENT_DELETED
 } from '../core/events.js';
 import { EventDispatcher,Vector3 } from 'three';
 import { Floorplan } from './floorplan.js';
 import { Utils } from '../core/utils.js';
 import { Factory } from '../items/factory.js';
-import { FloorItem } from '../items/floor_item';
+import { FloorItem } from '../items/floor_item.js';
+import { buildStateSnapshot } from '../llm/stateSnapshot.js';
 
 /**
  * A Model is an abstract concept the has the data structuring a floorplan. It connects a {@link Floorplan} and a {@link Scene}
@@ -24,8 +26,23 @@ export class Model extends EventDispatcher {
         this.__lightItems = [];
         this.__environment=null;
         this.__floorItems = [];
+        this.__stateVersion = 0;
+        this.__floorplanStateChangedEvent = this.__onFloorplanStateChanged.bind(this);
+        this.__floorplan.addEventListener(EVENT_NEW, this.__floorplanStateChangedEvent);
+        this.__floorplan.addEventListener(EVENT_UPDATED, this.__floorplanStateChangedEvent);
+        this.__floorplan.addEventListener(EVENT_DELETED, this.__floorplanStateChangedEvent);
+        this.__floorplan.addEventListener(EVENT_LOADED, this.__floorplanStateChangedEvent);
+        this.__floorplan.addEventListener(EVENT_EXTERNAL_FLOORPLAN_LOADED, this.__floorplanStateChangedEvent);
         // this.__wallSelectedEvent = this.__wallSelected.bind(this);
         // this.addEventListener(EVENT_WALL_CLICKED, this.__wallSelectedEvent);
+    }
+
+    __onFloorplanStateChanged() {
+        this.__bumpStateVersion();
+    }
+
+    __bumpStateVersion() {
+        this.__stateVersion += 1;
     }
 
     switchWireframe(flag) {
@@ -71,6 +88,7 @@ export class Model extends EventDispatcher {
             }
             this.__roomItems.push(item);
         }
+        this.__bumpStateVersion();
     }
 
     reset() {
@@ -84,6 +102,7 @@ export class Model extends EventDispatcher {
         // this.__amblightItem.length = 0;
         // this.__sunItem.length = 0;
         this.__floorItems.length = 0;
+        this.__bumpStateVersion();
         this.dispatchEvent({ type: EVENT_MODE_RESET });
 
     }
@@ -113,6 +132,7 @@ export class Model extends EventDispatcher {
         });
         this.__roomItems = [];
         this.__floorItems = [];
+        this.__bumpStateVersion();
     }
 
     removeItemByMetaData(item) {
@@ -125,9 +145,8 @@ export class Model extends EventDispatcher {
      * @param dontRemove If not set, also remove the item from the items list.
      */
     removeItem(item, keepInList) {
-        // use this for item meshes
-        this.__roomItems.pop(item);
-        this.remove(item, false);
+        this.remove(item, keepInList);
+        this.__bumpStateVersion();
         this.dispatchEvent({ type: EVENT_ITEM_REMOVED, item: item });
     }
 
@@ -137,8 +156,11 @@ export class Model extends EventDispatcher {
      remove(roomItem, keepInList) {
         keepInList = keepInList || false;
         if (!keepInList) {
-            roomItem.dispose();
+            if (roomItem && typeof roomItem.dispose === 'function') {
+                roomItem.dispose();
+            }
             Utils.removeValue(this.__roomItems, roomItem);
+            Utils.removeValue(this.__floorItems, roomItem);
         }
     }
 
@@ -160,6 +182,7 @@ export class Model extends EventDispatcher {
             this.__floorItems.push(item);
         }
         this.__roomItems.push(item);
+        this.__bumpStateVersion();
         this.dispatchEvent({ type: EVENT_NEW_ITEM, item: item });
     }
 
@@ -177,6 +200,7 @@ export class Model extends EventDispatcher {
 
     addItem(item) {
         this.__roomItems.push(item);
+        this.__bumpStateVersion();
         this.dispatchEvent({ type: EVENT_NEW_ITEM, item: item });
     }
 
@@ -186,6 +210,11 @@ export class Model extends EventDispatcher {
          */
         let eulerAngle = item.itemModel.innerRotation.clone().add(new Vector3(x, y, z));
         item.itemModel.innerRotation = eulerAngle;
+        this.__bumpStateVersion();
+    }
+
+    getStateSnapshot(options = {}) {
+        return buildStateSnapshot(this, options);
     }
 
     get roomItems() {

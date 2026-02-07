@@ -5,18 +5,18 @@ import {
     SpotLight, PointLight, SpotLightHelper,TextureLoader,RepeatWrapping,MeshPhongMaterial, Plane, CompressedPixelFormat
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { EVENT_ITEM_LOADED, EVENT_ITEM_LOADING, EVENT_UPDATED, EVENT_PARAMETRIC_GEOMETRY_UPATED, EVENT_ITEM_REMOVED } from "../core/events";
-import { Utils } from "../core/utils"
+import { EVENT_ITEM_LOADED, EVENT_ITEM_LOADING, EVENT_UPDATED, EVENT_PARAMETRIC_GEOMETRY_UPATED, EVENT_ITEM_REMOVED } from "../core/events.js";
+import { Utils } from "../core/utils.js";
 import { BoxGeometry, LineBasicMaterial, LineSegments, EdgesGeometry, ObjectLoader } from "three";
-import { FloorMaterial3D } from "../materials/FloorMaterial3D";
-import {ConfigurationHelper} from '../helpers/ConfigurationHelper';
+import { FloorMaterial3D } from "../materials/FloorMaterial3D.js";
+import {ConfigurationHelper} from '../helpers/ConfigurationHelper.js';
 import { Configuration,shadowVisible } from '../core/configuration.js';
 import {gsap, Power0} from 'gsap';
-import { Vector2 } from "three/build/three.module";
-import { WallFloorItem } from "../items/wall_floor_item";
-import { InWallItem } from '../items/in_wall_item';
-import { InWallFloorItem } from '../items/in_wall_floor_item';
-import { ItemStatistics3D } from "./ItemStatistics3D";
+import { Vector2 } from "three";
+import { WallFloorItem } from "../items/wall_floor_item.js";
+import { InWallItem } from '../items/in_wall_item.js';
+import { InWallFloorItem } from '../items/in_wall_floor_item.js';
+import { ItemStatistics3D } from "./ItemStatistics3D.js";
 // import { Group } from "three/build/three.module";
 
 export class Physical3DItem extends Mesh {

@@ -2,7 +2,7 @@ import { InWallItem } from './in_wall_item.js';
 import { Vector2, Vector3, Matrix4 } from 'three';
 import { UP_VECTOR } from './item.js';
 import { Utils } from '../core/utils.js';
-import { Plane } from 'three/build/three.module.js';
+import { Plane } from 'three';
 
 /** */
 export class InWallFloorItem extends InWallItem {

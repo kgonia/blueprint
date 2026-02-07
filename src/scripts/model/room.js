@@ -6,7 +6,7 @@ import { WallTypes, TEXTURE_DEFAULT_REPEAT, defaultFloorTexture, TEXTURE_PROPERT
 // import { / } from '../core/constants';
 import { Utils } from '../core/utils.js';
 import { HalfEdge } from './half_edge.js';
-import { BufferGeometry } from 'three/build/three.module';
+import { BufferGeometry } from 'three';
 /** Default texture to be used if nothing is provided. */
 export const defaultRoomTexture = { url: 'rooms/textures/hardwood.png', scale: 400 };
 

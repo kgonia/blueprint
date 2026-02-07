@@ -11,7 +11,7 @@ import { InWallItem } from '../items/in_wall_item.js';
 import { InWallFloorItem } from '../items/in_wall_floor_item.js';
 import { WallItem } from '../items/wall_item.js';
 import { WallFloorItem } from '../items/wall_floor_item.js';
-import { Matrix4 } from 'three/build/three.module';
+import { Matrix4 } from 'three';
 
 
 /** The default wall texture. */

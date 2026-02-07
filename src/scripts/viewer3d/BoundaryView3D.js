@@ -1,4 +1,4 @@
-import { BufferGeometry, DoubleSide, Mesh, Shape, ShapeGeometry, Vector2 } from "three";
+import { Box3, DoubleSide, Mesh, Shape, ShapeGeometry, Vector2, Vector3 } from "three";
 import { FloorMaterial3D } from "../materials/FloorMaterial3D";
 import {Utils} from '../core/utils.js'
 
@@ -39,11 +39,16 @@ export class BoundaryView3D extends Mesh{
         let floorSize = new Vector2(this.__boundary.width, this.__boundary.height);//this.room.floorRectangleSize.clone();
         let shape = new Shape(points);
         let geometry = new ShapeGeometry(shape);
+        const positionAttribute = geometry.getAttribute('position');
         const uvAttribute = geometry.getAttribute('uv');
+        const bounds = new Box3().setFromBufferAttribute(positionAttribute);
+        const boundsSize = bounds.getSize(new Vector3());
         for (let i = 0;i < uvAttribute.count; i++){
-            const uv = new Vector2();
-            uv.fromBufferAttribute(uvAttribute, i);
-            uvAttribute.setXY();
+            const position = new Vector3();
+            position.fromBufferAttribute(positionAttribute, i);
+            const u = boundsSize.x === 0 ? 0 : (position.x - bounds.min.x) / boundsSize.x;
+            const v = boundsSize.y === 0 ? 0 : (position.y - bounds.min.y) / boundsSize.y;
+            uvAttribute.setXY(i, u, v);
         }
 
         // geometry.faceVertexUvs[0] = [];
@@ -55,10 +60,9 @@ export class BoundaryView3D extends Mesh{
         //     geometry.faceVertexUvs[0].push([Utils.vertexToUv(vertA, floorSize), Utils.vertexToUv(vertB, floorSize), Utils.vertexToUv(vertC, floorSize)]);
         // });
 
-        geometry.faceVertexUvs[1] = geometry.faceVertexUvs[0];
         // geometry.computeFaceNormals();
         geometry.computeVertexNormals();
-        geometry.uvsNeedUpdate = true;
+        uvAttribute.needsUpdate = true;
         // console.log('COLOR FOR BOUNDARY REGION ::: ', this.__boundary.style.color);
         let material = new FloorMaterial3D({ color: this.__boundary.style.color, side: DoubleSide }, this.__boundary.style, this.__scene);
         let useGeometry = geometry;//new BufferGeometry().fromGeometry(geometry);
