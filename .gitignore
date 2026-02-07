@@ -1,15 +1,33 @@
-dist/
-build/
-.parcel-cache/
 node_modules/
-gitpush.sh~
-/.babelrc~
-*.blend1
-dist/*
-app/*
-.cache/*
-3D-Models-Internet/
-TextureSources/*
+.parcel-cache/
+.cache/
+dist/
+app/
+coverage/
 
-__pycache__
-package-lock.json
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.settings/
+
+# Python
+__pycache__/
+.venv/
+
+# Blender
+*.blend1
+
+# Temp/backup
+*~
+/.babelrc~
+
+# Misc local-only
+3D-Models-Internet/
